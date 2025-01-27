@@ -1,0 +1,31 @@
+examCode,subject,semester
+M101,Maths-1,1
+PHY101,Physics_1,1
+HSS101,English,1
+CS101,SDF_1,1
+E101,EDD,1
+M201,Maths_2,2
+PHY201,Physics_2,2
+HSS201,English_2,2
+CS201,SDF_2,2
+E201,Workshop,2
+M301,TFCS,3
+ES301,ES_1,3
+HSS301,PCP,3
+CS301,Data Structures,3
+CS302,DBW,3
+ES401,ES_2,4
+DS401,Digital Systems,4
+M401,PRP,4
+CS401,Algorithms,4
+EC401,Economics,4
+CS501,COA,5
+CS502,OS,5
+CS503,OpenSource,5
+HSS501,Constitution,5
+ML501,MachineLearning,5
+ML601,AI,6
+CS601,Database,6
+CS602,BlockChain,6
+P601,MinorProject,6
+HSS601,Literature,6
