@@ -210,5 +210,13 @@ void display(int total_slots,
             }
         }
     }
-    seating_arrangement_display();
+
+    cout << "\n\n";
+    // Ask user if they want to see the seating plan
+    cout << "\t\tDo you want to generate a seating plan for a specific exam? (y/n): ";
+    char choice;
+    cin >> choice;
+    if (choice == 'y' || choice == 'Y') {
+        generate_seating_plan_for_exam(schedule, student_counts, classrooms);
+    }
 } 

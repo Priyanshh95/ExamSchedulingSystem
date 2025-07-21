@@ -1,9 +1,11 @@
 #pragma once
 #include <string>
 
+using namespace std;
+
 class Exam {
 public:
-    std::string exam_code;
-    std::string subject_name;
+    string exam_code;
+    string subject_name;
     int semester;
 }; 

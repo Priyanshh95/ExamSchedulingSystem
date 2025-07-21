@@ -5,8 +5,10 @@
 #include "exam.h"
 #include "classroom.h"
 
+using namespace std;
+
 void clearScreen();
-std::vector<std::string> split(const std::string& s, char delimiter);
-std::vector<Student> load_students(const std::string& filename);
-std::vector<Exam> load_exams(const std::string& filename);
-std::vector<Classroom> load_classrooms(const std::string& filename); 
+vector<string> split(const string& s, char delimiter);
+vector<Student> load_students(const string& filename);
+vector<Exam> load_exams(const string& filename);
+vector<Classroom> load_classrooms(const string& filename); 

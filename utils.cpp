@@ -21,75 +21,75 @@ vector<string> split(const string& s, char delimiter) {
     return tokens;
 }
 
-std::vector<Student> load_students(const std::string& filename) {
-    std::vector<Student> students;
-    std::ifstream file(filename);
+vector<Student> load_students(const string& filename) {
+    vector<Student> students;
+    ifstream file(filename);
     if (!file.is_open()) {
-        std::cerr << "Error opening " << filename << std::endl;
+        cerr << "Error opening " << filename << endl;
         return students;
     }
 
-    std::string line;
+    string line;
     // Skip header
-    std::getline(file, line);
+    getline(file, line);
 
-    while (std::getline(file, line)) {
-        std::vector<std::string> tokens = split(line, ',');
+    while (getline(file, line)) {
+        vector<string> tokens = split(line, ',');
         if (tokens.size() == 4) {
             Student s;
             s.name = tokens[0];
-            s.enrollment_no = std::stoi(tokens[1]);
-            s.year = std::stoi(tokens[2]);
-            s.batch = std::stoi(tokens[3]);
+            s.enrollment_no = stoi(tokens[1]);
+            s.year = stoi(tokens[2]);
+            s.batch = stoi(tokens[3]);
             students.push_back(s);
         }
     }
     return students;
 }
 
-std::vector<Exam> load_exams(const std::string& filename) {
-    std::vector<Exam> exams;
-    std::ifstream file(filename);
+vector<Exam> load_exams(const string& filename) {
+    vector<Exam> exams;
+    ifstream file(filename);
     if (!file.is_open()) {
-        std::cerr << "Error opening " << filename << std::endl;
+        cerr << "Error opening " << filename << endl;
         return exams;
     }
 
-    std::string line;
+    string line;
     // Skip header
-    std::getline(file, line);
+    getline(file, line);
 
-    while (std::getline(file, line)) {
-        std::vector<std::string> tokens = split(line, ',');
+    while (getline(file, line)) {
+        vector<string> tokens = split(line, ',');
         if (tokens.size() == 3) {
             Exam e;
             e.exam_code = tokens[0];
             e.subject_name = tokens[1];
-            e.semester = std::stoi(tokens[2]);
+            e.semester = stoi(tokens[2]);
             exams.push_back(e);
         }
     }
     return exams;
 }
 
-std::vector<Classroom> load_classrooms(const std::string& filename) {
-    std::vector<Classroom> classrooms;
-    std::ifstream file(filename);
+vector<Classroom> load_classrooms(const string& filename) {
+    vector<Classroom> classrooms;
+    ifstream file(filename);
     if (!file.is_open()) {
-        std::cerr << "Error opening " << filename << std::endl;
+        cerr << "Error opening " << filename << endl;
         return classrooms;
     }
 
-    std::string line;
+    string line;
     // Skip header
-    std::getline(file, line);
+    getline(file, line);
 
-    while (std::getline(file, line)) {
-        std::vector<std::string> tokens = split(line, ',');
+    while (getline(file, line)) {
+        vector<string> tokens = split(line, ',');
         if (tokens.size() == 4) {
             Classroom c;
             c.room_id = tokens[0];
-            c.capacity = std::stoi(tokens[3]);
+            c.capacity = stoi(tokens[3]);
             classrooms.push_back(c);
         }
     }

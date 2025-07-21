@@ -1,8 +1,10 @@
 #pragma once
 #include <string>
 
+using namespace std;
+
 class Classroom {
 public:
-    std::string room_id;
+    string room_id;
     int capacity;
 }; 

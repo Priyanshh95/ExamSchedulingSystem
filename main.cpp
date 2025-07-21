@@ -11,7 +11,7 @@
 #include "seating.h"
 #include "utils.h"
 
-using namespace std ;
+using namespace std;
 #define endl "\n"
 
 int main()

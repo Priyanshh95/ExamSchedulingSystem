@@ -2,11 +2,13 @@
 #include <string>
 #include <vector>
 
+using namespace std;
+
 class Student {
 public:
-    std::string name;
+    string name;
     int enrollment_no;
     int year;
     int batch;
-    std::vector<std::string> subjects;
+    vector<string> subjects;
 }; 
