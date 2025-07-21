@@ -6,7 +6,7 @@
 
 using namespace std;
 
-void start();
+void run_exam_scheduler();
 
 // Builds the conflict graph
 void build_graph(const vector<string>& exam_group1,

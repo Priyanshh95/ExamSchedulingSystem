@@ -12,6 +12,7 @@ struct Seat {
 };
 
 void displaySeatingArrangement(const Classroom& classroom, int num_students);
-void generate_seating_plan_for_exam(const map<int, vector<string>>& schedule,
+void generate_seating_plan_interactive(const map<int, vector<string>>& schedule,
                                      const map<string, int>& student_counts,
-                                     const vector<Classroom>& classrooms); 
+                                     const vector<Classroom>& classrooms);
+void generate_seating_plan_standalone(); 

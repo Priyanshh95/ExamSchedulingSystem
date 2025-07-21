@@ -6,6 +6,7 @@
 #include <fstream> // Added for file operations
 #include <algorithm> // For std::find_if
 #include <map>
+#include <stdexcept> // For std::invalid_argument
 
 using namespace std;
 
@@ -32,18 +33,22 @@ vector<Student> load_students(const string& filename) {
     }
 
     string line;
-    // Skip header
-    getline(file, line);
+    getline(file, line); // Skip header
 
     while (getline(file, line)) {
         vector<string> tokens = split(line, ',');
         if (tokens.size() == 4) {
             Student s;
             s.name = tokens[0];
-            s.enrollment_no = stoi(tokens[1]);
-            s.year = stoi(tokens[2]);
-            s.batch = stoi(tokens[3]);
-            students.push_back(s);
+            try {
+                s.enrollment_no = stoi(tokens[1]);
+                s.year = stoi(tokens[2]);
+                s.batch = tokens[3]; // Assign directly as string
+                students.push_back(s);
+            } catch (const invalid_argument& ia) {
+                cerr << "Warning: Could not parse line in students.csv (invalid number): " << line << endl;
+                continue;
+            }
         }
     }
     return students;
@@ -58,8 +63,7 @@ vector<Exam> load_exams(const string& filename) {
     }
 
     string line;
-    // Skip header
-    getline(file, line);
+    getline(file, line); // Skip header
 
     while (getline(file, line)) {
         vector<string> tokens = split(line, ',');
@@ -67,8 +71,13 @@ vector<Exam> load_exams(const string& filename) {
             Exam e;
             e.exam_code = tokens[0];
             e.subject_name = tokens[1];
-            e.semester = stoi(tokens[2]);
-            exams.push_back(e);
+            try {
+                e.semester = stoi(tokens[2]);
+                exams.push_back(e);
+            } catch (const invalid_argument& ia) {
+                cerr << "Warning: Could not parse line in exam.csv (invalid number): " << line << endl;
+                continue;
+            }
         }
     }
     return exams;
@@ -83,16 +92,20 @@ vector<Classroom> load_classrooms(const string& filename) {
     }
 
     string line;
-    // Skip header
-    getline(file, line);
+    getline(file, line); // Skip header
 
     while (getline(file, line)) {
         vector<string> tokens = split(line, ',');
         if (tokens.size() == 4) {
             Classroom c;
             c.room_id = tokens[0];
-            c.capacity = stoi(tokens[3]);
-            classrooms.push_back(c);
+            try {
+                c.capacity = stoi(tokens[3]);
+                classrooms.push_back(c);
+            } catch (const invalid_argument& ia) {
+                cerr << "Warning: Could not parse line in classrooms.csv (invalid number): " << line << endl;
+                continue;
+            }
         }
     }
     return classrooms;

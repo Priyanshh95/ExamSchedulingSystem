@@ -9,6 +9,6 @@ public:
     string name;
     int enrollment_no;
     int year;
-    int batch;
+    string batch; // Changed from int to string
     vector<string> subjects;
 }; 

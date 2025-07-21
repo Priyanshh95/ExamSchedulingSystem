@@ -77,7 +77,7 @@ map<int, vector<string>> group_exams_by_slot(const map<string, int>& exam_colors
     return schedule;
 }
 
-void start() {
+void run_exam_scheduler() {
     cout << "\n\n\n\t\t----------------------------Welcome To Exam Time Table Scheduler------------------------\n\n\n\n";
 
     // Load all necessary data from CSV files
@@ -163,6 +163,14 @@ void display(int total_slots,
     cout << "\n\t\t\tHow many Maximum number of Slots per Day you Want? ";
     int slots_per_day;
     cin >> slots_per_day;
+
+    while(cin.fail() || slots_per_day <= 0) {
+        cout << "\n\t\tInvalid input. Please enter a positive number for slots per day: ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin >> slots_per_day;
+    }
+
     clearScreen();
 
     int total_days = (total_slots + slots_per_day - 1) / slots_per_day;
@@ -217,7 +225,7 @@ void display(int total_slots,
     char choice;
     cin >> choice;
     if (choice == 'y' || choice == 'Y') {
-        generate_seating_plan_for_exam(schedule, student_counts, classrooms);
+        generate_seating_plan_interactive(schedule, student_counts, classrooms);
     }
     
     // Ask user if they want to save the schedule
