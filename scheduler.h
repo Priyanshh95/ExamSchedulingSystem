@@ -4,6 +4,19 @@
 #include <map>
 
 void start();
-void initialize(int n1, std::string arr1[], int n2, std::string arr2[], int n3, std::string arr3[], std::map<std::string, std::vector<std::string>> &adj, std::map<std::string,int> &color);
-std::map<int, std::vector<std::string>> schedule(std::map<std::string, std::vector<std::string>> &adj, std::map<std::string, int> &color, int &max_days);
-void display(int days, std::map<int, std::vector<std::string>> &hash, std::string name, int semester); 
+
+// Builds the conflict graph
+void build_graph(const std::vector<std::string>& exam_group1,
+                 const std::vector<std::string>& exam_group2,
+                 const std::vector<std::string>& exam_group3,
+                 std::map<std::string, std::vector<std::string>>& adj);
+
+// Colors the graph and returns the number of colors used (days)
+int color_graph(const std::map<std::string, std::vector<std::string>>& adj,
+                std::map<std::string, int>& exam_colors);
+
+// Groups exams by color/slot
+std::map<int, std::vector<std::string>> group_exams_by_slot(
+    const std::map<std::string, int>& exam_colors);
+
+void display(int days, const std::map<int, std::vector<std::string>>& schedule, std::string name, int semester); 
