@@ -219,4 +219,11 @@ void display(int total_slots,
     if (choice == 'y' || choice == 'Y') {
         generate_seating_plan_for_exam(schedule, student_counts, classrooms);
     }
+    
+    // Ask user if they want to save the schedule
+    cout << "\n\t\tDo you want to save this schedule to a file? (y/n): ";
+    cin >> choice;
+    if (choice == 'y' || choice == 'Y') {
+        save_schedule_to_csv("exam_schedule.csv", schedule, slots_per_day, student_counts, classrooms);
+    }
 } 
