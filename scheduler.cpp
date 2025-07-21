@@ -80,11 +80,28 @@ map<int, vector<string>> group_exams_by_slot(const map<string, int>& exam_colors
 void start() {
     cout << "\n\n\n\t\t----------------------------Welcome To Exam Time Table Scheduler------------------------\n\n\n\n";
 
+    // Load all necessary data from CSV files
     vector<Exam> all_exams = load_exams("exam.csv");
-    if (all_exams.empty()) {
-        cerr << "Could not load exams. Exiting." << endl;
+    vector<Student> all_students = load_students("students.csv");
+    vector<Classroom> all_classrooms = load_classrooms("classrooms.csv");
+
+    if (all_exams.empty() || all_students.empty() || all_classrooms.empty()) {
+        cerr << "Error loading data files. Please ensure exam.csv, students.csv, and classrooms.csv are present and not empty." << endl;
         return;
     }
+
+    // --- Estimate student counts per exam ---
+    // This is an estimation because we don't have direct student-to-exam enrollment data.
+    // We assume students of a certain year take all exams of the corresponding semesters.
+    map<int, int> students_per_year;
+    for (const auto& s : all_students) {
+        students_per_year[s.year]++;
+    }
+
+    map<string, int> student_counts_per_exam;
+    int year_for_sem_group1 = 2023; // Most recent year
+    int year_for_sem_group2 = 2022;
+    int year_for_sem_group3 = 2021; // Oldest year (placeholder)
 
     string name = "JIIT";
     cout << "\n\t\t\tEnter Odd(1) or Even(2) Semester: ";
@@ -95,15 +112,33 @@ void start() {
     vector<string> sem1_exams, sem2_exams, sem3_exams;
     if (semester_choice == 1) { // Odd semester
         for (const auto& exam : all_exams) {
-            if (exam.semester == 1) sem1_exams.push_back(exam.exam_code);
-            if (exam.semester == 3) sem2_exams.push_back(exam.exam_code);
-            if (exam.semester == 5) sem3_exams.push_back(exam.exam_code);
+            if (exam.semester == 1) {
+                sem1_exams.push_back(exam.exam_code);
+                student_counts_per_exam[exam.exam_code] = students_per_year[year_for_sem_group1];
+            }
+            if (exam.semester == 3) {
+                sem2_exams.push_back(exam.exam_code);
+                student_counts_per_exam[exam.exam_code] = students_per_year[year_for_sem_group2];
+            }
+            if (exam.semester == 5) {
+                sem3_exams.push_back(exam.exam_code);
+                student_counts_per_exam[exam.exam_code] = students_per_year[year_for_sem_group3]; // Assumed count
+            }
         }
     } else { // Even semester
         for (const auto& exam : all_exams) {
-            if (exam.semester == 2) sem1_exams.push_back(exam.exam_code);
-            if (exam.semester == 4) sem2_exams.push_back(exam.exam_code);
-            if (exam.semester == 6) sem3_exams.push_back(exam.exam_code);
+            if (exam.semester == 2) {
+                sem1_exams.push_back(exam.exam_code);
+                student_counts_per_exam[exam.exam_code] = students_per_year[year_for_sem_group1];
+            }
+            if (exam.semester == 4) {
+                sem2_exams.push_back(exam.exam_code);
+                student_counts_per_exam[exam.exam_code] = students_per_year[year_for_sem_group2];
+            }
+            if (exam.semester == 6) {
+                sem3_exams.push_back(exam.exam_code);
+                student_counts_per_exam[exam.exam_code] = students_per_year[year_for_sem_group3]; // Assumed count
+            }
         }
     }
 
@@ -111,36 +146,68 @@ void start() {
     build_graph(sem1_exams, sem2_exams, sem3_exams, adj);
 
     map<string, int> exam_colors;
-    int days_required = color_graph(adj, exam_colors);
+    int total_slots = color_graph(adj, exam_colors);
 
     map<int, vector<string>> exam_schedule = group_exams_by_slot(exam_colors);
 
-    display(days_required, exam_schedule, name, semester_choice);
+    display(total_slots, exam_schedule, name, semester_choice, student_counts_per_exam, all_classrooms);
 }
 
-void display(int days, const map<int, vector<string>>& schedule, string name, int semester) {
-    cout << "\n\t\t\tNumber of Days to take Examinations would be: " << days << "\n";
+void display(int total_slots,
+             const map<int, vector<string>>& schedule,
+             string name,
+             int semester,
+             const map<string, int>& student_counts,
+             const vector<Classroom>& classrooms) {
+    cout << "\n\t\t\tTotal slots required for all exams: " << total_slots << "\n";
     cout << "\n\t\t\tHow many Maximum number of Slots per Day you Want? ";
-    int slots;
-    cin >> slots;
+    int slots_per_day;
+    cin >> slots_per_day;
     clearScreen();
+
+    int total_days = (total_slots + slots_per_day - 1) / slots_per_day;
+    cout << "\n\t\t\tThis schedule will take " << total_days << " days.\n";
 
     cout << "\n\n\t\t----------------------------- Examination Schedule ------------------------------";
     cout << "\n\n\t\t\t\t\tCollege: " << name << "\tSemester: " << (semester == 1 ? "ODD" : "EVEN");
-    int day_cnt = 1, slot_cnt = 1;
-    cout << "\n\n\t\t\t-----------------------Day " << day_cnt << "-----------------------\n\n";
-    for (auto const& pair : schedule) {
-        cout << "\t\t\t\tSlot " << slot_cnt << " -> ";
-        const std::vector<std::string>& exams = pair.second;
-        for (size_t i = 0; i < exams.size(); ++i) {
-            cout << exams[i] << (i == exams.size() - 1 ? "" : " , ");
+
+    map<int, map<int, vector<Classroom>>> daily_slot_classrooms;
+    for (int d = 1; d <= total_days; ++d) {
+        for (int s = 1; s <= slots_per_day; ++s) {
+            daily_slot_classrooms[d][s] = classrooms;
         }
-        cout << "\n";
-        slot_cnt++;
-        if (slot_cnt > slots) {
-            day_cnt++;
-            slot_cnt = 1;
-            cout << "\n\t\t\t-----------------------Day " << day_cnt << "-----------------------\n\n";
+    }
+
+    int day_cnt = 0;
+    for (auto const& pair : schedule) {
+        int color = pair.first;
+        const vector<string>& exams_in_slot = pair.second;
+
+        int current_day = (color - 1) / slots_per_day + 1;
+        int current_slot_in_day = (color - 1) % slots_per_day + 1;
+
+        if (current_day > day_cnt) {
+            day_cnt = current_day;
+            cout << "\n\n\t\t\t-----------------------Day " << day_cnt << "-----------------------\n\n";
+        }
+
+        cout << "\t\t\t\tSlot " << current_slot_in_day << ":\n";
+
+        for (const auto& exam_code : exams_in_slot) {
+            int num_students = student_counts.count(exam_code) ? student_counts.at(exam_code) : 0;
+
+            vector<Classroom>& available_classrooms = daily_slot_classrooms[current_day][current_slot_in_day];
+            
+            auto it = find_if(available_classrooms.begin(), available_classrooms.end(),
+                               [&](const Classroom& c) { return c.capacity >= num_students; });
+
+            cout << "\t\t\t\t  - Exam: " << exam_code << " (" << num_students << " students) -> ";
+            if (it != available_classrooms.end()) {
+                cout << "Classroom: " << it->room_id << " (Capacity: " << it->capacity << ")\n";
+                available_classrooms.erase(it);
+            } else {
+                cout << "No suitable classroom found!\n";
+            }
         }
     }
     seating_arrangement_display();

@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include "classroom.h" // Include the Classroom class definition
 
 void start();
 
@@ -19,4 +20,9 @@ int color_graph(const std::map<std::string, std::vector<std::string>>& adj,
 std::map<int, std::vector<std::string>> group_exams_by_slot(
     const std::map<std::string, int>& exam_colors);
 
-void display(int days, const std::map<int, std::vector<std::string>>& schedule, std::string name, int semester); 
+void display(int total_slots,
+             const std::map<int, std::vector<std::string>>& schedule,
+             std::string name,
+             int semester,
+             const std::map<std::string, int>& student_counts,
+             const std::vector<Classroom>& classrooms); 
